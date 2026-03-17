@@ -1,4 +1,4 @@
-package UC3;
+package UC4;
 
 public class QuantityLength {
     private final double value;
@@ -30,17 +30,23 @@ public class QuantityLength {
         if (obj == null || getClass() != obj.getClass()) return false;
         
         QuantityLength other = (QuantityLength) obj;
-        return Double.compare(this.convertToBaseUnit(), other.convertToBaseUnit()) == 0;
+        double thisBase = this.convertToBaseUnit();
+        double otherBase = other.convertToBaseUnit();
+        return Math.abs(thisBase - otherBase) < 1e-5;
     }
 
     @Override
     public int hashCode() {
-        long baseValue = Double.doubleToLongBits(convertToBaseUnit());
-        return Long.hashCode(baseValue);
+        double rounded = Math.round(convertToBaseUnit() * 1e6) / 1e6;
+        return Double.hashCode(rounded);
     }
 
     @Override
     public String toString() {
-        return String.format("Quantity(%.1f, %s)", value, unit.name().toLowerCase());
+        String formatted = String.format("%.6f", value).replaceAll("0+$", "");
+        if (formatted.endsWith(".")) {
+            formatted += "0";
+        }
+        return "Quantity(" + formatted + ", " + unit.name().toLowerCase() + ")";
     }
 }

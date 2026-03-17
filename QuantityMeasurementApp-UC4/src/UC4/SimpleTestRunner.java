@@ -1,13 +1,12 @@
-package UC3;
+package UC4;
 
 public class SimpleTestRunner {
-    
+
     private static int testsRun = 0;
     private static int testsPassed = 0;
-    
+
     public static void main(String[] args) {
-        System.out.println("=== Running UC3 Test Suite ===\n");
-        
+        System.out.println("=== Running UC4 Test Suite ===\n");
 
         testEquality_FeetToFeet_SameValue();
         testEquality_InchToInch_SameValue();
@@ -27,20 +26,34 @@ public class SimpleTestRunner {
         testGetValue();
         testGetUnit();
         testConvertToBaseUnit();
-        
+        testEquality_YardToYard_SameValue();
+        testEquality_YardToYard_DifferentValue();
+        testEquality_YardToFeet_EquivalentValue();
+        testEquality_FeetToYard_EquivalentValue();
+        testEquality_YardToInches_EquivalentValue();
+        testEquality_InchesToYard_EquivalentValue();
+        testEquality_YardToFeet_NonEquivalentValue();
+        testEquality_CentimeterToCentimeter_SameValue();
+        testEquality_CentimeterToCentimeter_DifferentValue();
+        testEquality_CentimeterToInch_EquivalentValue();
+        testEquality_InchToCentimeter_EquivalentValue();
+        testEquality_CentimeterToFeet_NonEquivalentValue();
+        testEquality_YardToCentimeter_EquivalentValue();
+        testEquality_MultiUnit_TransitiveProperty();
+
         System.out.println("\n=== Test Results ===");
         System.out.println("Tests Run: " + testsRun);
         System.out.println("Tests Passed: " + testsPassed);
         System.out.println("Tests Failed: " + (testsRun - testsPassed));
         System.out.println("Success Rate: " + (testsPassed * 100.0 / testsRun) + "%");
-        
+
         if (testsPassed == testsRun) {
-            System.out.println("\n✅ All tests passed! UC3 implementation is working correctly.");
+            System.out.println("\n✅ All tests passed! UC4 implementation is working correctly.");
         } else {
             System.out.println("\n❌ Some tests failed. Please check the implementation.");
         }
     }
-    
+
     private static void assertTrue(String message, boolean condition) {
         testsRun++;
         if (condition) {
@@ -50,11 +63,11 @@ public class SimpleTestRunner {
             System.out.println("❌ FAIL: " + message);
         }
     }
-    
+
     private static void assertEquals(String message, Object expected, Object actual) {
         testsRun++;
-        boolean equal = (expected == null && actual == null) || 
-                       (expected != null && expected.equals(actual));
+        boolean equal = (expected == null && actual == null) ||
+                (expected != null && expected.equals(actual));
         if (equal) {
             testsPassed++;
             System.out.println("✅ PASS: " + message);
@@ -62,11 +75,11 @@ public class SimpleTestRunner {
             System.out.println("❌ FAIL: " + message + " - Expected: " + expected + ", Actual: " + actual);
         }
     }
-    
+
     private static void assertNotEquals(String message, Object expected, Object actual) {
         testsRun++;
-        boolean notEqual = (expected == null && actual != null) || 
-                          (expected != null && !expected.equals(actual));
+        boolean notEqual = (expected == null && actual != null) ||
+                (expected != null && !expected.equals(actual));
         if (notEqual) {
             testsPassed++;
             System.out.println("✅ PASS: " + message);
@@ -74,7 +87,7 @@ public class SimpleTestRunner {
             System.out.println("❌ FAIL: " + message + " - Both values are equal: " + expected);
         }
     }
-    
+
     private static void testEquality_FeetToFeet_SameValue() {
         QuantityLength quantity1 = new QuantityLength(1.0, LengthUnit.FEET);
         QuantityLength quantity2 = new QuantityLength(1.0, LengthUnit.FEET);
@@ -136,13 +149,10 @@ public class SimpleTestRunner {
         assertNotEquals("Quantity should not equal objects of different types", quantity, notAQuantity);
     }
 
-
-
     private static void testEquality_TransitiveProperty() {
         QuantityLength feet1 = new QuantityLength(1.0, LengthUnit.FEET);
         QuantityLength inches = new QuantityLength(12.0, LengthUnit.INCH);
         QuantityLength feet2 = new QuantityLength(1.0, LengthUnit.FEET);
-        
         assertTrue("Transitive property: a=b and b=c implies a=c", feet1.equals(feet2));
         assertTrue("Transitive property: a=b", feet1.equals(inches));
         assertTrue("Transitive property: b=c", inches.equals(feet2));
@@ -151,7 +161,6 @@ public class SimpleTestRunner {
     private static void testEquality_SymmetricProperty() {
         QuantityLength feet = new QuantityLength(1.0, LengthUnit.FEET);
         QuantityLength inches = new QuantityLength(12.0, LengthUnit.INCH);
-        
         assertTrue("Symmetric property: if a.equals(b) then b.equals(a)", feet.equals(inches));
         assertTrue("Symmetric property: if b.equals(a) then a.equals(b)", inches.equals(feet));
     }
@@ -159,7 +168,6 @@ public class SimpleTestRunner {
     private static void testEquality_ConsistentProperty() {
         QuantityLength feet = new QuantityLength(1.0, LengthUnit.FEET);
         QuantityLength inches = new QuantityLength(12.0, LengthUnit.INCH);
-        
         assertTrue("Consistent property: multiple calls return same result", feet.equals(inches));
         assertTrue("Consistent property: multiple calls return same result", feet.equals(inches));
         assertTrue("Consistent property: multiple calls return same result", feet.equals(inches));
@@ -168,7 +176,6 @@ public class SimpleTestRunner {
     private static void testHashCodeConsistency() {
         QuantityLength quantity1 = new QuantityLength(1.0, LengthUnit.FEET);
         QuantityLength quantity2 = new QuantityLength(12.0, LengthUnit.INCH);
-        
         assertEquals("Equal objects should have same hash code", quantity1.hashCode(), quantity2.hashCode());
     }
 
@@ -191,8 +198,94 @@ public class SimpleTestRunner {
     private static void testConvertToBaseUnit() {
         QuantityLength feet = new QuantityLength(2.0, LengthUnit.FEET);
         QuantityLength inches = new QuantityLength(24.0, LengthUnit.INCH);
-        
         assertEquals("Feet should convert to base unit correctly", 2.0, feet.convertToBaseUnit());
         assertEquals("Inches should convert to base unit correctly", 2.0, inches.convertToBaseUnit());
+    }
+
+    private static void testEquality_YardToYard_SameValue() {
+        QuantityLength yard1 = new QuantityLength(1.0, LengthUnit.YARD);
+        QuantityLength yard2 = new QuantityLength(1.0, LengthUnit.YARD);
+        assertEquals("Identical yard measurements should be equal", yard1, yard2);
+    }
+
+    private static void testEquality_YardToYard_DifferentValue() {
+        QuantityLength yard1 = new QuantityLength(1.0, LengthUnit.YARD);
+        QuantityLength yard2 = new QuantityLength(2.0, LengthUnit.YARD);
+        assertNotEquals("Different yard measurements should not be equal", yard1, yard2);
+    }
+
+    private static void testEquality_YardToFeet_EquivalentValue() {
+        QuantityLength yard = new QuantityLength(1.0, LengthUnit.YARD);
+        QuantityLength feet = new QuantityLength(3.0, LengthUnit.FEET);
+        assertEquals("1 yard should equal 3 feet", yard, feet);
+    }
+
+    private static void testEquality_FeetToYard_EquivalentValue() {
+        QuantityLength feet = new QuantityLength(3.0, LengthUnit.FEET);
+        QuantityLength yard = new QuantityLength(1.0, LengthUnit.YARD);
+        assertEquals("3 feet should equal 1 yard", feet, yard);
+    }
+
+    private static void testEquality_YardToInches_EquivalentValue() {
+        QuantityLength yard = new QuantityLength(1.0, LengthUnit.YARD);
+        QuantityLength inches = new QuantityLength(36.0, LengthUnit.INCH);
+        assertEquals("1 yard should equal 36 inches", yard, inches);
+    }
+
+    private static void testEquality_InchesToYard_EquivalentValue() {
+        QuantityLength inches = new QuantityLength(36.0, LengthUnit.INCH);
+        QuantityLength yard = new QuantityLength(1.0, LengthUnit.YARD);
+        assertEquals("36 inches should equal 1 yard", inches, yard);
+    }
+
+    private static void testEquality_YardToFeet_NonEquivalentValue() {
+        QuantityLength yard = new QuantityLength(1.0, LengthUnit.YARD);
+        QuantityLength feet = new QuantityLength(2.0, LengthUnit.FEET);
+        assertNotEquals("1 yard should not equal 2 feet", yard, feet);
+    }
+
+    private static void testEquality_CentimeterToCentimeter_SameValue() {
+        QuantityLength cm1 = new QuantityLength(2.0, LengthUnit.CENTIMETER);
+        QuantityLength cm2 = new QuantityLength(2.0, LengthUnit.CENTIMETER);
+        assertEquals("Identical centimeter measurements should be equal", cm1, cm2);
+    }
+
+    private static void testEquality_CentimeterToCentimeter_DifferentValue() {
+        QuantityLength cm1 = new QuantityLength(1.0, LengthUnit.CENTIMETER);
+        QuantityLength cm2 = new QuantityLength(2.0, LengthUnit.CENTIMETER);
+        assertNotEquals("Different centimeter measurements should not be equal", cm1, cm2);
+    }
+
+    private static void testEquality_CentimeterToInch_EquivalentValue() {
+        QuantityLength cm = new QuantityLength(1.0, LengthUnit.CENTIMETER);
+        QuantityLength inch = new QuantityLength(0.393701, LengthUnit.INCH);
+        assertEquals("1 cm should equal 0.393701 inches", cm, inch);
+    }
+
+    private static void testEquality_InchToCentimeter_EquivalentValue() {
+        QuantityLength inch = new QuantityLength(0.393701, LengthUnit.INCH);
+        QuantityLength cm = new QuantityLength(1.0, LengthUnit.CENTIMETER);
+        assertEquals("0.393701 inches should equal 1 cm", inch, cm);
+    }
+
+    private static void testEquality_CentimeterToFeet_NonEquivalentValue() {
+        QuantityLength cm = new QuantityLength(1.0, LengthUnit.CENTIMETER);
+        QuantityLength feet = new QuantityLength(1.0, LengthUnit.FEET);
+        assertNotEquals("1 cm should not equal 1 foot", cm, feet);
+    }
+
+    private static void testEquality_YardToCentimeter_EquivalentValue() {
+        QuantityLength yard = new QuantityLength(1.0, LengthUnit.YARD);
+        QuantityLength cm = new QuantityLength(91.44, LengthUnit.CENTIMETER);
+        assertEquals("1 yard should equal 91.44 cm", yard, cm);
+    }
+
+    private static void testEquality_MultiUnit_TransitiveProperty() {
+        QuantityLength yard = new QuantityLength(1.0, LengthUnit.YARD);
+        QuantityLength feet = new QuantityLength(3.0, LengthUnit.FEET);
+        QuantityLength inches = new QuantityLength(36.0, LengthUnit.INCH);
+        assertTrue("Transitive: 1 yard = 3 feet", yard.equals(feet));
+        assertTrue("Transitive: 3 feet = 36 inches", feet.equals(inches));
+        assertTrue("Transitive: 1 yard = 36 inches", yard.equals(inches));
     }
 }
